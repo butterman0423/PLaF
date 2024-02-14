@@ -1,3 +1,9 @@
+# Note for My System Only
+
+ocaml utilities are installed ONLY in the opam environment.
+
+Run eval $(opam env) to switch to this environment.
+
 # Programming Language Fundamentals
 
 These notes and accompanying OCaml source code take a hands-on

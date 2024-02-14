@@ -1,2 +1,5 @@
 .DS_Store
+.git_pat
+.git_ignore
+README.md
 /_build
