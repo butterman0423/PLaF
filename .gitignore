@@ -3,3 +3,4 @@
 .git_ignore
 README.md
 /_build
+*.link
