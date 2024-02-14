@@ -1,7 +1,59 @@
+(**
+ * Name: Nathaniel Escaro
+ * Pledge: I pledge my honor that I have abided by the Stevens Honor System.
+ **)
+
+(** TODOs 
+ * Lists
+ * TODO emptylist
+ *  - creates an empty list
+ * TODO cons e1 e2
+ *  - adds an e1 to a list
+ *  - if e2 is not a list ERRORS
+ * TODO hd e1
+ *  - Returns the head of e1
+ *  - if e1 is not a list ERRORS
+ * TODO tl
+ *  - Returns the tail of e1
+ *  - if e1 is not a list ERRORS
+ * TODO empty? e1
+ *  - Checks if the list is empty or not
+ *  - if e1 is not a list ERRORS
+ *
+ * Tuple
+ * TODO <e1, ..., en>
+ *  - Creates a tuple with the values of each of the ei
+ * TODO let <id1, ..., idn> = e1 in e2
+ *  - Evaluates e1:
+ *    - Is tuple
+ *    - Extracts each n component of tuple
+ *    - Binds ei to idi
+ *  - Evaluates e2 with that environment
+ **)
+
 open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
-    
+
+type expr = 
+    | Var of string
+    | Int of int
+    | Sub of expr*expr
+    | Let of string*expr*expr
+    | IsZero of expr
+    | ITE of expr*expr
+    | Pair of expr*expr
+    | Fst of expr
+    | Snd of expr
+    | Debug of expr
+    | Cons of expr*expr         (** ADDITIONAL TYPES START HERE **)
+    | Hd of expr
+    | Tl of expr
+    | IsEmpty of expr
+    | Emptylist of texpr option
+    | Tuple of expr list
+    | Untuple of string list * expr*expr
+
 (** [eval_expr e] evaluates expression [e] *)
 let rec eval_expr : expr -> exp_val ea_result =
   fun e ->
