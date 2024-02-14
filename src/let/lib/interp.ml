@@ -35,25 +35,6 @@ open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
 
-type expr = 
-    | Var of string
-    | Int of int
-    | Sub of expr*expr
-    | Let of string*expr*expr
-    | IsZero of expr
-    | ITE of expr*expr
-    | Pair of expr*expr
-    | Fst of expr
-    | Snd of expr
-    | Debug of expr
-    | Cons of expr*expr         (** ADDITIONAL TYPES START HERE **)
-    | Hd of expr
-    | Tl of expr
-    | IsEmpty of expr
-    | Emptylist of texpr option
-    | Tuple of expr list
-    | Untuple of string list * expr*expr
-
 (** [eval_expr e] evaluates expression [e] *)
 let rec eval_expr : expr -> exp_val ea_result =
   fun e ->
@@ -118,6 +99,19 @@ let rec eval_expr : expr -> exp_val ea_result =
     string_of_env >>= fun str ->
     print_endline str; 
     error "Debug called"
+  
+  (** ADDITIONS START HERE **)
+ 
+  | Emptylist(e) -> failwith ""
+  | Cons(e1, e2) -> failwith ""
+  | Hd(e) -> failwith ""
+  | Tl(e) -> failwith ""
+  | IsEmpty(e) -> failwith ""
+  | Tuple(e) -> failwith ""
+  | Untuple(e) -> failwith ""
+
+  (** ADDITIONS END HERE **)
+
   | _ -> failwith "Not implemented yet!"
 
 (** [eval_prog e] evaluates program [e] *)
