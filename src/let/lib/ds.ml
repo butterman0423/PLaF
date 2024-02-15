@@ -117,6 +117,7 @@ let rec string_of_expval = function
   | BoolVal b -> "BoolVal " ^ string_of_bool b
   | PairVal (ev1,ev2) -> "PairVal("^string_of_expval ev1
                          ^","^ string_of_expval ev2^")"
+  | ListVal lst -> "ListVal("^String.concat "," (List.map string_of_expval lst)^")"
   | TupleVal evs -> "TupleVal("^String.concat "," (List.map string_of_expval evs)^")"
 
 let rec string_of_env' ac = function
