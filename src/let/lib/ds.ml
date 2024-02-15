@@ -7,6 +7,7 @@ type exp_val =
   | NumVal of int
   | BoolVal of bool
   | PairVal of exp_val*exp_val
+  | ListVal of exp_val list
   | TupleVal of exp_val list
 type env =
   | EmptyEnv
