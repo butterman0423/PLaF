@@ -102,13 +102,14 @@ let rec eval_expr : expr -> exp_val ea_result =
   
   (** ADDITIONS START HERE **)
  
-  | Emptylist(e) -> failwith ""
+  | EmptyList(_t) ->
+    return (ListVal [])
   | Cons(e1, e2) -> failwith ""
   | Hd(e) -> failwith ""
   | Tl(e) -> failwith ""
   | IsEmpty(e) -> failwith ""
-  | Tuple(e) -> failwith ""
-  | Untuple(e) -> failwith ""
+  | Tuple(es) -> failwith ""
+  | Untuple(ids, e1, e2) -> failwith ""
 
   (** ADDITIONS END HERE **)
 
