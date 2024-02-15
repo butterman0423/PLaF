@@ -113,7 +113,10 @@ let rec eval_expr : expr -> exp_val ea_result =
     list_of_expval >>= fun lst ->
     eval_expr e1 >>= fun v ->
     return (ListVal (v::lst))
-  | Hd(e) -> failwith ""
+  | Hd(e) -> 
+    eval_expr e >>=
+    list_of_expval >>= fun lst ->
+    return (List.hd lst)
   | Tl(e) -> failwith ""
   | IsEmpty(e) -> failwith ""
   | Tuple(es) -> failwith ""
