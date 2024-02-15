@@ -35,6 +35,19 @@ open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
 
+(** PROVIDED IN ASSIGNMENT PDF **)
+
+(*
+eval_exprs : expr list -> (exp_val list) ea_result =
+    fun es ->
+    match es with
+    | [] -> return []
+    | h::t -> eval_expr h >>= fun i ->
+              eval_exprs t >>= fun l ->
+              return (i::l)
+*)
+(** END **)
+
 let list_of_expval : exp_val -> (exp_val list) ea_result = function
     | ListVal l -> return l
     | _ -> error "Expected a list!"
@@ -125,12 +138,23 @@ let rec eval_expr : expr -> exp_val ea_result =
     eval_expr e >>= 
     list_of_expval >>= fun lst ->
     return (BoolVal (lst=[]))
-  | Tuple(es) -> failwith ""
+  | Tuple(es) ->
+    eval_exprs es >>= fun tup ->
+    return (TupleVal tup)
   | Untuple(ids, e1, e2) -> failwith ""
 
   (** ADDITIONS END HERE **)
 
   | _ -> failwith "Not implemented yet!"
+and
+    eval_exprs : expr list -> (exp_val list) ea_result =
+        fun es ->
+        match es with
+        | [] -> return []
+        | h::t -> eval_expr h >>= fun i ->
+                eval_exprs t >>= fun l ->
+                return (i::l)
+(* [eval_exprs e] provided in stub *)
 
 (** [eval_prog e] evaluates program [e] *)
 let eval_prog (AProg(_,e)) =
