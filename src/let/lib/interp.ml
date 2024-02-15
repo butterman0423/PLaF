@@ -121,7 +121,10 @@ let rec eval_expr : expr -> exp_val ea_result =
     eval_expr e >>=
     list_of_expval >>= fun lst ->
     return (ListVal (List.tl lst))
-  | IsEmpty(e) -> failwith ""
+  | IsEmpty(e) -> 
+    eval_expr e >>= 
+    list_of_expval >>= fun lst ->
+    return (BoolVal (lst=[]))
   | Tuple(es) -> failwith ""
   | Untuple(ids, e1, e2) -> failwith ""
 
