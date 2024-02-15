@@ -3,34 +3,6 @@
  * Pledge: I pledge my honor that I have abided by the Stevens Honor System.
  **)
 
-(** TODOs 
- * Lists
- * TODO emptylist
- *  - creates an empty list
- * TODO cons e1 e2
- *  - adds an e1 to a list
- *  - if e2 is not a list ERRORS
- * TODO hd e1
- *  - Returns the head of e1
- *  - if e1 is not a list ERRORS
- * TODO tl
- *  - Returns the tail of e1
- *  - if e1 is not a list ERRORS
- * TODO empty? e1
- *  - Checks if the list is empty or not
- *  - if e1 is not a list ERRORS
- *
- * Tuple
- * TODO <e1, ..., en>
- *  - Creates a tuple with the values of each of the ei
- * TODO let <id1, ..., idn> = e1 in e2
- *  - Evaluates e1:
- *    - Is tuple
- *    - Extracts each n component of tuple
- *    - Binds ei to idi
- *  - Evaluates e2 with that environment
- **)
-
 open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
