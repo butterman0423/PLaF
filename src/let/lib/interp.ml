@@ -134,9 +134,10 @@ let rec eval_expr : expr -> exp_val ea_result =
     return (TupleVal tup)
   | Untuple(ids, e1, e2) ->
     expr_of_tuple e1 >>= fun tup ->
-    eval_expr @@
-    List.fold_right2 (fun idi edi last -> Let(idi, edi, last))
-        ids tup (e2)
+    if (List.length ids) <> (List.length tup)
+    then error "Arguments do not match parameters!"
+    else eval_expr @@ List.fold_right2 
+        (fun idi edi last -> Let(idi, edi, last)) ids tup (e2)
 
   (*** ADDITIONS END HERE ***)
 
