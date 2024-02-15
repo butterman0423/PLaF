@@ -35,6 +35,10 @@ open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
 
+let list_of_expval : exp_val -> (exp_val list) ea_result = function
+    | ListVal l -> return l
+    | _ -> error "Expected a list!"
+
 (** [eval_expr e] evaluates expression [e] *)
 let rec eval_expr : expr -> exp_val ea_result =
   fun e ->
@@ -104,7 +108,11 @@ let rec eval_expr : expr -> exp_val ea_result =
  
   | EmptyList(_t) ->
     return (ListVal [])
-  | Cons(e1, e2) -> failwith ""
+  | Cons(e1, e2) ->
+    eval_expr e2 >>=
+    list_of_expval >>= fun lst ->
+    eval_expr e1 >>= fun v ->
+    return (ListVal (v::lst))
   | Hd(e) -> failwith ""
   | Tl(e) -> failwith ""
   | IsEmpty(e) -> failwith ""
