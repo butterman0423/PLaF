@@ -108,7 +108,7 @@ let rec eval_expr : expr -> exp_val ea_result =
     print_endline str; 
     error "Debug called"
   
-  (** ADDITIONS START HERE **)
+  (*** ADDITIONS START HERE ***)
  
   | EmptyList(_t) ->
     return (ListVal [])
@@ -138,7 +138,7 @@ let rec eval_expr : expr -> exp_val ea_result =
     List.fold_right2 (fun idi edi last -> Let(idi, edi, last))
         ids tup (e2)
 
-  (** ADDITIONS END HERE **)
+  (*** ADDITIONS END HERE ***)
 
   | _ -> failwith "Not implemented yet!"
 and
