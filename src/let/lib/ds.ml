@@ -2,6 +2,10 @@
 
 (* expressed values and environments are defined mutually recursively *)
 
+(**
+  * Nathaniel Escaro
+  * I pledge my honor that I have abided by the Stevens Honor System
+**)
 
 type exp_val =
   | NumVal of int
