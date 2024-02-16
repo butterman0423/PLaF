@@ -129,3 +129,10 @@ let string_of_env : string ea_result =
   match env with
   | EmptyEnv -> Ok ">>Environment:\nEmpty"
   | _ -> Ok (">>Environment:\n"^ string_of_env' [] env)
+
+(** MY HELPERS **)
+
+let list_of_expval : exp_val -> (exp_val list) ea_result = function
+    | ListVal l -> return l
+    | _ -> error "Expected a list!"
+

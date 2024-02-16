@@ -7,10 +7,7 @@ open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
 
-let list_of_expval : exp_val -> (exp_val list) ea_result = function
-    | ListVal l -> return l
-    | _ -> error "Expected a list!"
-
+(** THIS HELPER MUST BE IN HERE **)
 let expr_of_tuple : expr -> (expr list) ea_result = function
     | Tuple tup -> return tup
     | _ -> error "Expected a tuple!"
@@ -92,11 +89,15 @@ let rec eval_expr : expr -> exp_val ea_result =
   | Hd(e) -> 
     eval_expr e >>=
     list_of_expval >>= fun lst ->
-    return (List.hd lst)
+    if lst=[]
+    then error "List is empty"
+    else return (List.hd lst)
   | Tl(e) -> 
     eval_expr e >>=
     list_of_expval >>= fun lst ->
-    return (ListVal (List.tl lst))
+    if lst=[]
+    then error "List is empty"
+    else return (ListVal (List.tl lst))
   | IsEmpty(e) -> 
     eval_expr e >>= 
     list_of_expval >>= fun lst ->
