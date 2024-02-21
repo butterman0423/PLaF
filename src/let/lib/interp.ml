@@ -7,11 +7,6 @@ open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
 
-(** THIS HELPER MUST BE IN HERE **)
-let expr_of_tuple : expr -> (expr list) ea_result = function
-    | Tuple tup -> return tup
-    | _ -> error "Expected a tuple!"
-
 (** [eval_expr e] evaluates expression [e] *)
 let rec eval_expr : expr -> exp_val ea_result =
   fun e ->
@@ -106,11 +101,10 @@ let rec eval_expr : expr -> exp_val ea_result =
     eval_exprs es >>= fun tup ->
     return (TupleVal tup)
   | Untuple(ids, e1, e2) ->
-    expr_of_tuple e1 >>= fun tup ->
-    if (List.length ids) <> (List.length tup)
-    then error "Arguments do not match parameters!"
-    else eval_expr @@ List.fold_right2 
-        (fun idi edi last -> Let(idi, edi, last)) ids tup (e2)
+    eval_expr e1 >>=
+    list_of_tupleVal >>=
+    extend_env_list ids >>+
+    eval_expr e2
 
   (*** ADDITIONS END HERE ***)
 
