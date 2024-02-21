@@ -78,11 +78,14 @@ let rec extend_env_list_helper =
     ExtendEnv(id,ev,extend_env_list_helper idt evt en)
   | _,_ -> failwith
              "extend_env_list_helper: ids and evs have different sizes"
-  
+
+(** MODIFIED TO RETURN env result **)
 let extend_env_list =
   fun ids evs ->
   fun en ->
-  Ok (extend_env_list_helper ids evs en)
+  if (List.length ids) <> (List.length evs)
+  then Error "extend_env_list: Arguments do not match parameters!"
+  else Ok (extend_env_list_helper ids evs en)
     
 let rec apply_env : string -> exp_val ea_result = fun id env ->
   match env with
