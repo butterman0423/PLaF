@@ -92,12 +92,51 @@ let rec eval_expr : expr -> exp_val ea_result = fun e ->
     sequence (List.map eval_expr es) >>= fun l ->
     return (List.hd (List.rev l))
   | Unit -> return UnitVal
+  
+  | IsNumber(e) ->
+    eval_expr e >>= fun ev ->
+    (match ev with
+     | NumVal _ -> return (BoolVal true)
+     | _ -> return (BoolVal false)
+    )
+  | Record(fs) ->
+    sequence (List.map process_field fs) >>= fun evs ->
+    return (RecordVal (addIds fs evs))
+  | Proj(e, id) ->
+    eval_expr e >>=
+    fields_of_recordVal >>=
+    find_ev_from_fs id >>= fun ev ->
+    (match ev with 
+     | RefVal addr -> Store.deref g_store addr
+     | v -> return v
+    )
+  | SetField(e1, id, e2) ->
+    eval_expr e1 >>=
+    fields_of_recordVal >>=
+    find_ev_from_fs id >>= fun ev ->
+    (match ev with 
+     | RefVal addr -> eval_expr e2 >>= 
+                      Store.set_ref g_store addr >>= fun _ ->
+                      return (UnitVal)
+
+     | _ -> error "Field not mutable"
+    )
+  
   | Debug(_e) ->
     string_of_env >>= fun str_env ->
     let str_store = Store.string_of_store string_of_expval g_store 
     in (print_endline (str_env^"\n"^str_store);
     error "Reached breakpoint")
   | _ -> failwith ("Not implemented: "^string_of_expr e)
+and
+process_field (_id, (is_mutable, e)) =
+    eval_expr e >>= fun ev ->
+    if is_mutable
+    then return (RefVal (Store.new_ref g_store ev))
+    else return ev
+and
+addIds fs evs =
+    List.map2 (fun (id, _) ev -> (id, ev)) fs evs
 
 let eval_prog (AProg(_,e)) =
   eval_expr e         

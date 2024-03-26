@@ -55,7 +55,17 @@ let sequence (cs: ('a ea_result) list) : ('a list) ea_result  =
 let mapM (f:'a -> 'b ea_result) (vs:'a list) : ('b list) ea_result =
    sequence (List.map f vs)
 
+(** MY HELPERS **)
 
+let find_ev_from_fs : string -> (string*exp_val) list -> exp_val ea_result =
+    fun id fs ->
+    let res = List.filter (fun (id2, _) -> id=id2) fs 
+    in
+    (match res with
+     | [] -> error "Cannot find id in fields"
+     | (_, ev)::__ -> return ev
+    )
+(** END **)
 
 (* Operations on environments *)
 let empty_env : unit -> env ea_result =
