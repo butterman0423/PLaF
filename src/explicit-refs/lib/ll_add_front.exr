@@ -1,11 +1,11 @@
 
 (* Example 1 *)
 
-let l1 = { head <= 0; size <= 0} (* 0 in head signals null *)
+let l1 = { head <= 0 (*; size <= 0*)} (* 0 in head signals null *)
 in let add_front = proc (x) { proc (l) {
    	      begin
-	         l.head <={ data <=x; next <= l.head };
-		 l.size <= l.size+1
+	         l.head <={ data <=x; next <= l.head }(*;*)
+		 (*l.size <= l.size+1*)
               end
 	      } }
 in begin
