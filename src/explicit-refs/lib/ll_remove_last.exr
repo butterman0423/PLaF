@@ -6,11 +6,11 @@
 
 (* Example 1 *)
 
-let l1 = { head <= 0; size <= 0} (* 0 in head signals null *)
+let l1 = { head <= 0; len <= 0} (* 0 in head signals null *)
 in let add_front = proc (x) { proc (l) {
    	      begin
 	         l.head <={ data <=x; next <= l.head };
-		 l.size <= l.size+1
+		 l.len <= l.len+1
               end
 	      } }
 in letrec remove_last_helper(nd) =
@@ -18,9 +18,12 @@ in letrec remove_last_helper(nd) =
 	then nd.next <= 0
 	else (remove_last_helper nd.next)
 in let remove_last = proc(lst) {
-	if number?(lst.head.next)
-	then lst.head <= 0
-	else (remove_last_helper lst.head)
+	begin
+		if number?(lst.head.next)
+		then lst.head <= 0
+		else (remove_last_helper lst.head);
+		lst.len <= lst.len - 1
+	end
 } 
 in begin
      ((add_front 2) l1);

@@ -5,17 +5,17 @@
 
 (* Remove First exercise 1 *)
 
-let l1 = { head <= 0; size <= 0} (* 0 in head signals null *)
+let l1 = { head <= 0; len <= 0} (* 0 in head signals null *)
 in let add_front = proc (x) { proc (l) {
    	      begin
 	         l.head <={ data <=x; next <= l.head };
-		 l.size <= l.size+1
+		 l.len <= l.len+1
               end
 	      } }
 in let remove_first = proc(lst) {
 	begin
 		lst.head <= lst.head.next;
-		lst
+		lst.len <= lst.len - 1
 	end
 }
 in begin
