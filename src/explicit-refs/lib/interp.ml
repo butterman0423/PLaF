@@ -105,22 +105,21 @@ let rec eval_expr : expr -> exp_val ea_result = fun e ->
   | Proj(e, id) ->
     eval_expr e >>=
     fields_of_recordVal >>=
-    find_ev_from_fs id >>= fun ev ->
-    (match ev with 
-     | RefVal addr -> Store.deref g_store addr
-     | v -> return v
-    )
+    find_ev_from_fs id >>= fun (mut, ev) ->
+    if mut
+    then int_of_refVal ev >>= fun addr ->
+         Store.deref g_store addr
+    else return ev
   | SetField(e1, id, e2) ->
     eval_expr e1 >>=
     fields_of_recordVal >>=
-    find_ev_from_fs id >>= fun ev ->
-    (match ev with 
-     | RefVal addr -> eval_expr e2 >>= 
-                      Store.set_ref g_store addr >>= fun _ ->
-                      return (UnitVal)
-
-     | _ -> error "Field not mutable"
-    )
+    find_ev_from_fs id >>= fun (mut, ev) ->
+    if mut
+    then int_of_refVal ev >>= fun addr ->
+         eval_expr e2 >>=
+         Store.set_ref g_store addr >>= fun _ ->
+         return UnitVal
+    else error "Field not mutable"
   
   | Debug(_e) ->
     string_of_env >>= fun str_env ->
