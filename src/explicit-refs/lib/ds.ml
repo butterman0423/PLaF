@@ -11,6 +11,7 @@ type exp_val =
   | PairVal of exp_val*exp_val
   | TupleVal of exp_val list
   | RecordVal of (string*exp_val) list
+  (* | RecordVal of (string*(bool*exp_val)) list *)
   | UnitVal
   | RefVal of int
 and
