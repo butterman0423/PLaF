@@ -136,7 +136,12 @@ process_field (_id, (is_mutable, e)) =
     else return ev
 and
 addIds fs evs =
-    List.map2 (fun (id, _) ev -> (id, ev)) fs evs
+    List.map2 (fun (id, _) ev -> (id, (is_ref ev, ev))) fs evs
+and
+is_ref ev =
+    match ev with
+    | RefVal _ -> true
+    | _ -> false
 
 let eval_prog (AProg(_,e)) =
   eval_expr e         

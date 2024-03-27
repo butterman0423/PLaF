@@ -57,14 +57,15 @@ let mapM (f:'a -> 'b ea_result) (vs:'a list) : ('b list) ea_result =
 
 (** MY HELPERS **)
 
-let find_ev_from_fs : string -> (string*exp_val) list -> exp_val ea_result =
+let find_ev_from_fs : string -> (string*(bool*exp_val)) list -> exp_val ea_result =
     fun id fs ->
     let res = List.filter (fun (id2, _) -> id=id2) fs 
     in
     (match res with
      | [] -> error "Cannot find id in fields"
-     | (_, ev)::__ -> return ev
+     | (_, (_, ev))::_ -> return ev
     )
+
 (** END **)
 
 (* Operations on environments *)
@@ -148,7 +149,7 @@ let rec string_of_expval = function
   | UnitVal -> "UnitVal " 
   | RefVal i -> "RefVal ("^string_of_int i^")"
   | RecordVal(fs) -> "RecordVal("^ String.concat "," (List.map (fun (n,(b,ev)) ->
-      n^ if b then "<=" else "=" ^string_of_expval ev) fs) ^")"
+      n^ (if b then " <= " else " = ") ^string_of_expval ev) fs) ^")"
 and
    string_of_env' ac = function
   | EmptyEnv ->  "["^String.concat ",\n" ac^"]"
