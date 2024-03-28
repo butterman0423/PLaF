@@ -151,26 +151,9 @@ let interp (s:string) : exp_val result =
   in run c
 
 
-(** Adding interpf since not included by default **)
-(** [interpf f] reads and evaluates [f] **)
-(** f must be a file name with extension *.exr **)
-
-let interpf (f: string) : exp_val result = 
-    let file = f^".exr"
-    in let buf = ref ""
-    in let ic = open_in file
-    in let rec read = 
-        fun () ->
-            let line = input_line ic in
-            begin
-                buf := !buf ^ line ^ "\n";
-                read()
-            end
-    in
-    try
-        read();
-        raise End_of_file
-    with err ->
-        match err with
-        | End_of_file -> interp !buf
-        | _ -> failwith "Something unexpected occured"
+(** [interpf s] reads and evaluates [s] **)
+let interpf (s: string) : exp_val result = 
+    let s = String.trim s
+    in let file_name =
+        match String.index_opt s '.' with None -> s^".exr" | _ -> s
+    in interp @@ read_file file_name
