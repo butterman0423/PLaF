@@ -67,8 +67,8 @@ declaration")
     chk_expr e1 >>= fun t1 ->
     chk_expr e2 >>= fun t2 ->
     (match t1 with
-     | RefType rt with rt=t2 -> return UnitType
-     | RefType rt with rt<>t2 -> error "setref: Value to set does not match reference type"
+     | RefType rt when rt=t2 -> return UnitType
+     | RefType rt when rt<>t2 -> error "setref: Value to set does not match reference type"
      | _ -> error "setref: Expected a reference type"
     )
   | BeginEnd([]) ->
@@ -84,23 +84,23 @@ declaration")
     chk_expr e1 >>= fun t1 ->
     chk_expr e2 >>= fun t2 ->
     (match t2 with
-     | ListType lt with lt=t1 -> return t2
-     | ListType lt with lt<>t1 -> error "cons: Value to cons does not match list type"
+     | ListType lt when lt=t1 -> return t2
+     | ListType lt when lt<>t1 -> error "cons: Value to cons does not match list type"
      | _ -> error "cons: Expected a list type"
+    )
   | IsEmpty(e) -> 
     chk_expr e >>= fun t ->
     (match t with
      | ListType _ -> return BoolType
      | TreeType _ -> return BoolType    (* PART OF TASK 5.3 *)
      | _ -> error "empty?: Expected a list or tree type"
-    if t=ListType
-    then return BoolType
-    else error "empty?: Expected a list type"
+    )
   | Hd(e) -> 
     chk_expr e >>= fun t ->
     (match t with
      | ListType lt -> return lt
      | _ -> error "hd: Expected a list type"
+    )
   | Tl(e) -> 
     chk_expr e >>= fun t ->
     if t=ListType
@@ -115,13 +115,14 @@ declaration")
     chk_expr le >>= fun t2 ->
     chk_expr re >>= fun t3 ->
     (match t2, t3 with
-     | TreeType lt1, TreeType lt2 with lt1=t1 && lt2=t1 -> return (TreeType t1)
-     | TreeType lt1, TreeType lt2 with lt1<>t1 && lt2=t1 -> 
+     | TreeType lt1, TreeType lt2 when lt1=t1 && lt2=t1 -> return (TreeType t1)
+     | TreeType lt1, TreeType lt2 when lt1<>t1 && lt2=t1 -> 
        error "node: Value type does not match left node"
-     | TreeType lt1, TreeType lt2 with lt1=t1 && lt2<>t1 -> 
+     | TreeType lt1, TreeType lt2 when lt1=t1 && lt2<>t1 -> 
        error "node: Value type does not match right node"
      | TreeType lt1, _ -> error "node: Expected tree type for right node"
      | _, _ -> error "node: Expected tree type for left node"
+    )
   | CaseT(target, emptycase, id1, id2, id3, nodecase) ->
     chk_expr target >>= fun t1 ->
     chk_expr emptycase >>= fun et ->
@@ -131,7 +132,7 @@ declaration")
         chk_expr id2 >>= fun ra_lt ->
         chk_expr id3 >>= fun ra_rt ->
         (match ra_lt, ra_rt with
-         | lt, rt with d=t && lt=t1 && rt=t2 ->
+         | lt, rt when d=t && lt=t1 && rt=t2 ->
            ( extend_tenv "d" d >>+
              extend_tenv "lt" lt >>+
              extend_tenv "rt" rt >>+
@@ -140,11 +141,11 @@ declaration")
              then return nt
              else error "caseT: Type of empty case and node case do not match"
            )
-         | lt, rt with d=t && lt<>t1 && rt=t2 ->
+         | lt, rt when d=t && lt<>t1 && rt=t2 ->
            error "caseT: Type of lt does not match tree type"
-         | lt, rt with d=t && lt=t1 && rt<>t2 ->
+         | lt, rt when d=t && lt=t1 && rt<>t2 ->
            error "caseT: Type of rt does not match tree type"
-         | _, _, with d<>t ->
+         | _, _ when d<>t ->
            error "caseT: Type of d does not match tree value type"
         )
        )
