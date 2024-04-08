@@ -16,7 +16,7 @@ in let add_last = proc(lst) { proc(v) {
 		if number?(lst.head)
 		then if zero?(lst.head)
 			 then lst.head <= { data <= v; next <= 0}
-         	else lst
+         	 else lst.length <= lst.length - 1
 		else ((add_last_helper lst.head) v);
 		lst.length <= lst.length + 1
 	end
