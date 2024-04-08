@@ -88,7 +88,7 @@ declaration")
     chk_expr e2 >>= fun t2 ->
     (match t2 with
      | ListType lt when lt=t1 -> return t2
-     | ListType lt when lt<>t1 -> error "cons: Value to cons does not match list type"
+     | ListType lt when lt<>t1 -> error "cons: type of head and tail do not match"
      | _ -> error "cons: Expected a list type"
     )
   | IsEmpty(e) -> 
