@@ -56,21 +56,19 @@ declaration")
   (* TASK 5.1 *)
   | NewRef(e) -> 
     chk_expr e >>= fun t ->
-    return (RefType(t))
+    return (RefType t)
   | DeRef(e) -> 
-    chk_expr e >> = fun t ->
+    chk_expr e >>= fun t ->
     (match t with
      | RefType t2 -> return t2
      | _ -> error "deref: Expected a reference type"
     )
   | SetRef(e1, e2) ->
     chk_expr e1 >>= fun t1 ->
+    chk_expr e2 >>= fun t2 ->
     (match t1 with
-     | RefType rt -> 
-       chk_expr e2 >>= fun t2 ->
-       if rt=t2
-       then return UnitType
-       else error "setref: Value to set does not match reference type"
+     | RefType rt with rt=t2 -> return rt
+     | RefType rt with rt<>t2 -> error "setref: Value to set does not match reference type"
      | _ -> error "setref: Expected a reference type"
     )
   | BeginEnd([]) ->
@@ -80,11 +78,30 @@ declaration")
     List.hd @@ (List.rev es)
 
   (* TASK 5.2 *)
-  | EmptyList(t) -> failwith "Implement me"
-  | Cons(e1, e2) -> failwith "Implement me"
-  | IsEmpty(e) -> failwith "Implement me"
-  | Hd(e) -> failwith "Implement me"
-  | Tl(e) -> failwith "Implement me"
+  | EmptyList(t) -> 
+    return (ListType t)
+  | Cons(e1, e2) -> 
+    chk_expr e1 >>= fun t1 ->
+    chk_expr e2 >>= fun t2 ->
+    (match t2 with
+     | ListType lt with lt=t1 -> return lt
+     | ListType lt with lt<>t1 -> error "cons: Value to cons does not match list type"
+     | _ -> error "cons: Expected a list type"
+  | IsEmpty(e) -> 
+    chk_expr e >>= fun t ->
+    if t=ListType
+    then return BoolType
+    else error "empty?: Expected a list type"
+  | Hd(e) -> 
+    chk_expr e >>= fun t ->
+    (match t with
+     | ListType lt -> return lt
+     | _ -> error "hd: Expected a list type"
+  | Tl(e) -> 
+    chk_expr e >>= fun t ->
+    if t=ListType
+    then return t
+    else "tl: Expected a list type"
 
   (* TASK 5.3 *)
   | EmptyTree(t) -> failwith "Implement me"
