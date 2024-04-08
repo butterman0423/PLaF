@@ -132,13 +132,14 @@ declaration")
         chk_expr id3 >>= fun ra_rt ->
         (match ra_lt, ra_rt with
          | lt, rt with d=t && lt=t1 && rt=t2 ->
-           extend_tenv "d" d >>+
-           extend_tenv "lt" lt >>+
-           extend_tenv "rt" rt >>+
-           chk_expr nodecase >>= fun nt ->
-           if nt=et
-           then return nt
-           else error "caseT: Type of empty case and node case do not match"
+           ( extend_tenv "d" d >>+
+             extend_tenv "lt" lt >>+
+             extend_tenv "rt" rt >>+
+             chk_expr nodecase >>= fun nt ->
+             if nt=et
+             then return nt
+             else error "caseT: Type of empty case and node case do not match"
+           )
          | lt, rt with d=t && lt<>t1 && rt=t2 ->
            error "caseT: Type of lt does not match tree type"
          | lt, rt with d=t && lt=t1 && rt<>t2 ->
