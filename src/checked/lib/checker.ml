@@ -78,8 +78,11 @@ declaration")
     return t
 
   (* TASK 5.2 *)
-  | EmptyList(t) -> 
-    return (ListType t)
+  | EmptyList(t) ->
+    (match t with
+     | Some lt -> return (ListType lt)
+     | _ -> error "emptylist: Expected a type" 
+    )
   | Cons(e1, e2) -> 
     chk_expr e1 >>= fun t1 ->
     chk_expr e2 >>= fun t2 ->
@@ -103,13 +106,16 @@ declaration")
     )
   | Tl(e) -> 
     chk_expr e >>= fun t ->
-    if t=ListType
-    then return t
-    else "tl: Expected a list type"
+    (match t with
+     | ListType _ -> return t
+     | _ -> error "tl: Expected a list type"
 
   (* TASK 5.3 *)
-  | EmptyTree(t) -> 
-    return (TreeType t)
+  | EmptyTree(t) ->
+    (match t with
+     | Some tt -> return (TreeType tt)
+     | _ -> error "emptytree: Expected a type"
+    ) 
   | Node(de, le, re) -> 
     chk_expr de >>= fun t1 ->
     chk_expr le >>= fun t2 ->
