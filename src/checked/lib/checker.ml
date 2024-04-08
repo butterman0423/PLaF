@@ -89,6 +89,10 @@ declaration")
      | _ -> error "cons: Expected a list type"
   | IsEmpty(e) -> 
     chk_expr e >>= fun t ->
+    (match t with
+     | ListType _ -> return BoolType
+     | TreeType _ -> return BoolType    (* PART OF TASK 5.3 *)
+     | _ -> error "empty?: Expected a list or tree type"
     if t=ListType
     then return BoolType
     else error "empty?: Expected a list type"
@@ -104,9 +108,47 @@ declaration")
     else "tl: Expected a list type"
 
   (* TASK 5.3 *)
-  | EmptyTree(t) -> failwith "Implement me"
-  | Node(de, le, re) -> failwith "Implement me"
-  | CaseT(target, emptycase, id1, id2, id3, nodecase) -> failwith "Implement me"
+  | EmptyTree(t) -> 
+    return (TreeType t)
+  | Node(de, le, re) -> 
+    chk_expr de >>= fun t1 ->
+    chk_expr le >>= fun t2 ->
+    chk_expr re >>= fun t3 ->
+    (match t2, t3 with
+     | TreeType lt1, TreeType lt2 with lt1=t1 && lt2=t1 -> return (TreeType t1)
+     | TreeType lt1, TreeType lt2 with lt1<>t1 && lt2=t1 -> 
+       error "node: Value type does not match left node"
+     | TreeType lt1, TreeType lt2 with lt1=t1 && lt2<>t1 -> 
+       error "node: Value type does not match right node"
+     | TreeType lt1, _ -> error "node: Expected tree type for right node"
+     | _, _ -> error "node: Expected tree type for left node"
+  | CaseT(target, emptycase, id1, id2, id3, nodecase) ->
+    chk_expr target >>= fun t1 ->
+    chk_expr emptycase >>= fun et ->
+    (match t1 with
+     | TreeType t -> 
+       (chk_expr id1 >>= fun d ->
+        chk_expr id2 >>= fun ra_lt ->
+        chk_expr id3 >>= fun ra_rt ->
+        (match ra_lt, ra_rt with
+         | lt, rt with d=t && lt=t1 && rt=t2 ->
+           extend_tenv "d" d >>+
+           extend_tenv "lt" lt >>+
+           extend_tenv "rt" rt >>+
+           chk_expr nodecase >>= fun nt ->
+           if nt=et
+           then return nt
+           else error "caseT: Type of empty case and node case do not match"
+         | lt, rt with d=t && lt<>t1 && rt=t2 ->
+           error "caseT: Type of lt does not match tree type"
+         | lt, rt with d=t && lt=t1 && rt<>t2 ->
+           error "caseT: Type of rt does not match tree type"
+         | _, _, with d<>t ->
+           error "caseT: Type of d does not match tree value type"
+        )
+       )
+     | _ -> error "caseT: Expected a tree type"
+    )
 
   | Debug(_e) ->
     string_of_tenv >>= fun str ->
