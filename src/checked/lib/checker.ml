@@ -109,7 +109,7 @@ declaration")
     (match t with
      | ListType _ -> return t
      | _ -> error "tl: Expected a list type"
-
+    )
   (* TASK 5.3 *)
   | EmptyTree(t) ->
     (match t with
