@@ -67,7 +67,7 @@ declaration")
     chk_expr e1 >>= fun t1 ->
     chk_expr e2 >>= fun t2 ->
     (match t1 with
-     | RefType rt with rt=t2 -> return rt
+     | RefType rt with rt=t2 -> return UnitType
      | RefType rt with rt<>t2 -> error "setref: Value to set does not match reference type"
      | _ -> error "setref: Expected a reference type"
     )
@@ -84,7 +84,7 @@ declaration")
     chk_expr e1 >>= fun t1 ->
     chk_expr e2 >>= fun t2 ->
     (match t2 with
-     | ListType lt with lt=t1 -> return lt
+     | ListType lt with lt=t1 -> return t2
      | ListType lt with lt<>t1 -> error "cons: Value to cons does not match list type"
      | _ -> error "cons: Expected a list type"
   | IsEmpty(e) -> 
