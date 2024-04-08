@@ -52,6 +52,45 @@ let rec chk_expr : expr -> texpr tea_result = function
      else error
          "LetRec: Type of recursive function does not match
 declaration")
+
+  (* TASK 5.1 *)
+  | NewRef(e) -> 
+    chk_expr e >>= fun t ->
+    return (RefType(t))
+  | DeRef(e) -> 
+    chk_expr e >> = fun t ->
+    (match t with
+     | RefType t2 -> return t2
+     | _ -> error "deref: Expected a reference type"
+    )
+  | SetRef(e1, e2) ->
+    chk_expr e1 >>= fun t1 ->
+    (match t1 with
+     | RefType rt -> 
+       chk_expr e2 >>= fun t2 ->
+       if rt=t2
+       then return UnitType
+       else error "setref: Value to set does not match reference type"
+     | _ -> error "setref: Expected a reference type"
+    )
+  | BeginEnd([]) ->
+    return UnitType
+  | BeginEnd(es) -> 
+    return @@ chk_expr @@ 
+    List.hd @@ (List.rev es)
+
+  (* TASK 5.2 *)
+  | EmptyList(t) -> failwith "Implement me"
+  | Cons(e1, e2) -> failwith "Implement me"
+  | IsEmpty(e) -> failwith "Implement me"
+  | Hd(e) -> failwith "Implement me"
+  | Tl(e) -> failwith "Implement me"
+
+  (* TASK 5.3 *)
+  | EmptyTree(t) -> failwith "Implement me"
+  | Node(de, le, re) -> failwith "Implement me"
+  | CaseT(target, emptycase, id1, id2, id3, nodecase) -> failwith "Implement me"
+
   | Debug(_e) ->
     string_of_tenv >>= fun str ->
     print_endline str;
