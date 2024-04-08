@@ -73,9 +73,9 @@ declaration")
     )
   | BeginEnd([]) ->
     return UnitType
-  | BeginEnd(es) -> 
-    return @@ chk_expr @@ 
-    List.hd @@ (List.rev es)
+  | BeginEnd(es) ->
+    chk_expr (List.hd (List.rev es)) >>= fun t -> 
+    return t
 
   (* TASK 5.2 *)
   | EmptyList(t) -> 
