@@ -143,11 +143,10 @@ declaration")
        (extend_tenv id1 t >>+ 
         extend_tenv id2 t1 >>+
         extend_tenv id3 t1 >>+
-        chk_expr nodecase >>= fun nt ->
+        chk_expr nodecase) >>= fun nt ->
         if nt=et
         then return nt
         else error "caseT: Return types of node case and empty case do not match"
-       )
      | _ -> error "caseT: Expected a tree type"
     )
 
