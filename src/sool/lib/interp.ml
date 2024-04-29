@@ -49,7 +49,8 @@ let initialize_class_env cs =
     | [] -> []
     | Class (name,super,_impl,_fields,methods)::_  when name=c_name ->
       (List.map (fun (Method(n,_ret_type,pars,body))
-                  -> ((*name_mangle*) n (*pars*),(List.map fst pars,body,super,List.flatten fss)))
+                 -> let n = name_mangle n pars (* T2 EDIT *)
+                    in (n,(List.map fst pars,body,super,List.flatten fss)))
          methods) @ get_methods cs super (List.tl fss) cs
     | Class (_,_,_,_,_)::cs'  | Interface(_,_)::cs'
       -> get_methods cs c_name fss cs'
@@ -60,7 +61,8 @@ let initialize_class_env cs =
       | Class (name,super,_impl,fields,methods)::cs'  ->
         let fss = (List.map fst fields) :: get_fields cs super cs
         in let ms = (List.map (fun (Method(n,_ret_type,pars,body))
-                                -> ((*name_mangle*) n (*pars*),(List.map fst pars,body,super,List.flatten fss)))
+                                -> let n = name_mangle n pars (* T2 EDIT *)
+                                   in (n,(List.map fst pars,body,super,List.flatten fss)))
                        methods) @ get_methods cs super (List.tl fss) cs
         in
         g_class_env := (name,(super,List.flatten fss,ms))::!g_class_env;
@@ -101,7 +103,8 @@ let lookup_method : string -> string -> class_env -> method_decl option =
   match List.assoc_opt c_name c_env with
   | None -> None
   (*| Some (_super,_fs,ms) -> List.assoc_opt m_name ms*)
-   | Some (_, _, ms) -> failwith (List.fold_right (fun (n,_) acc -> n^" "^acc) ms "") 
+  | Some (_super,_fs,ms) -> print_endline @@ ("Find "^m_name^" "^(List.fold_right (fun (n,_) acc -> n^" "^acc) ms ""));
+                            List.assoc_opt m_name ms
 
 let rec apply_method : string -> exp_val -> exp_val list ->
   method_decl -> exp_val ea_result =
@@ -221,18 +224,21 @@ and
      | Some (_super,fields,methods) -> 
        new_env fields >>= fun env ->
        let self = ObjectVal(c_name,env)
-       in (match List.assoc_opt "initialize" methods with
+       (* T2 EDIT *) (* prev init_n replaced by "initialize" *)
+       in let init_n = name_mangle "initialize" args
+       in (match List.assoc_opt init_n methods with
            | None -> return self
-           | Some m -> apply_method "initialize" self args m >>= fun _ ->
+           | Some m -> apply_method init_n self args m >>= fun _ ->
              return self))
+       (* T2 EDIT *)
   | Send(e,m_name,es) ->
     eval_expr e >>= fun self ->
     obj_of_objectVal self >>= fun (c_name,_) ->
     eval_exprs es >>= fun args ->
-    (* T2 EDIT
+    (* T2 EDIT *)
     let m_name = name_mangle m_name args
     in
-    T2 EDIT *)
+    (* T2 EDIT *)
     (match lookup_method c_name m_name !g_class_env with
      | None -> error "Method not found"
      | Some m -> apply_method m_name self args m)
@@ -243,6 +249,10 @@ and
     eval_expr (Var "_super") >>=
     string_of_stringVal >>= fun c_name ->
     eval_expr (Var "_self") >>= fun self ->
+    (* T2 EDIT *)
+    let m_name = name_mangle m_name args
+    in
+    (* T2 EDIT *)
     (match lookup_method c_name m_name !g_class_env with
      | None -> error "Method not found"
      | Some m -> apply_method m_name self args m)
