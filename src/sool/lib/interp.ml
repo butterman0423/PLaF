@@ -19,6 +19,13 @@ let g_store = Store.empty_store 20 (NumVal 0)
 let g_class_env : class_env ref = ref []
 
 
+(* STUB *)
+
+let name_mangle n es = 
+    n^"_"^string_of_int (List.length es)
+
+(* END STUB *)
+
 
 (* Initialize contents of g_class_env variable  *)
 
@@ -42,7 +49,7 @@ let initialize_class_env cs =
     | [] -> []
     | Class (name,super,_impl,_fields,methods)::_  when name=c_name ->
       (List.map (fun (Method(n,_ret_type,pars,body))
-                  -> (n,(List.map fst pars,body,super,List.flatten fss)))
+                  -> ((*name_mangle*) n (*pars*),(List.map fst pars,body,super,List.flatten fss)))
          methods) @ get_methods cs super (List.tl fss) cs
     | Class (_,_,_,_,_)::cs'  | Interface(_,_)::cs'
       -> get_methods cs c_name fss cs'
@@ -53,7 +60,7 @@ let initialize_class_env cs =
       | Class (name,super,_impl,fields,methods)::cs'  ->
         let fss = (List.map fst fields) :: get_fields cs super cs
         in let ms = (List.map (fun (Method(n,_ret_type,pars,body))
-                                -> (n,(List.map fst pars,body,super,List.flatten fss)))
+                                -> ((*name_mangle*) n (*pars*),(List.map fst pars,body,super,List.flatten fss)))
                        methods) @ get_methods cs super (List.tl fss) cs
         in
         g_class_env := (name,(super,List.flatten fss,ms))::!g_class_env;
@@ -93,7 +100,8 @@ let lookup_method : string -> string -> class_env -> method_decl option =
   fun c_name m_name c_env ->
   match List.assoc_opt c_name c_env with
   | None -> None
-  | Some (_super,_fs,ms) -> List.assoc_opt m_name ms
+  (*| Some (_super,_fs,ms) -> List.assoc_opt m_name ms*)
+   | Some (_, _, ms) -> failwith (List.fold_right (fun (n,_) acc -> n^" "^acc) ms "") 
 
 let rec apply_method : string -> exp_val -> exp_val list ->
   method_decl -> exp_val ea_result =
@@ -221,6 +229,10 @@ and
     eval_expr e >>= fun self ->
     obj_of_objectVal self >>= fun (c_name,_) ->
     eval_exprs es >>= fun args ->
+    (* T2 EDIT
+    let m_name = name_mangle m_name args
+    in
+    T2 EDIT *)
     (match lookup_method c_name m_name !g_class_env with
      | None -> error "Method not found"
      | Some m -> apply_method m_name self args m)
@@ -287,6 +299,7 @@ and
   initialize_class_env cs;   (* Step 1 *) 
   eval_expr e                (* Step 2 *)
 and
+  (* is_subclass ADDITION *)
   is_subclass : string -> string -> class_env -> exp_val ea_result =
   fun id1 id2 e ->
   if (List.assoc_opt id2 e)=None
