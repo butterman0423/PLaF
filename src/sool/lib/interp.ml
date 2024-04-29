@@ -254,7 +254,17 @@ and
   | IsEmpty(e) ->
     eval_expr e >>=
     list_of_listVal >>= fun l ->
-    return @@ BoolVal (l=[])   
+    return @@ BoolVal (l=[])
+
+  (* ADDITIONS START HERE *)
+
+  | IsInstanceOf(e, id) ->
+    eval_expr e >>=
+    obj_of_objectVal >>= fun (name, _) -> 
+    is_subclass name id !g_class_env
+  
+  (* ADDITIONS END HERE *)
+  
   (* Debug *)
   | Debug(_e) ->
     string_of_env >>= fun str_env ->
@@ -276,7 +286,16 @@ and
   fun (AProg(cs, e)) ->
   initialize_class_env cs;   (* Step 1 *) 
   eval_expr e                (* Step 2 *)
-
+and
+  is_subclass : string -> string -> class_env -> exp_val ea_result =
+  fun id1 id2 e ->
+  if (List.assoc_opt id2 e)=None
+  then error ("is_subclass: class "^id2^" not found.")
+  else let (sup, _, _) = List.assoc id1 e
+       in match sup with
+          | _ when id1<>id2 && sup="object" && id2<>"object" -> return (BoolVal false)
+          | _ when id1=id2 || sup=id2 -> return (BoolVal true)
+          | _ -> is_subclass sup id2 e
 
 (** [interp s] evaluates program [s] *)
 let interp (s: string) : exp_val result = 
