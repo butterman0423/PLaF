@@ -1,3 +1,8 @@
+(*
+ * Name: Nathaniel Escaro
+ * Pledge: I pledge my honor that I have abided by the Stevens Honor System.
+ *)
+
 open Ds
 open ReM
 open Parser_plaf.Ast
@@ -102,9 +107,7 @@ let lookup_method : string -> string -> class_env -> method_decl option =
   fun c_name m_name c_env ->
   match List.assoc_opt c_name c_env with
   | None -> None
-  (*| Some (_super,_fs,ms) -> List.assoc_opt m_name ms*)
-  | Some (_super,_fs,ms) -> print_endline @@ ("Find "^m_name^" "^(List.fold_right (fun (n,_) acc -> n^" "^acc) ms ""));
-                            List.assoc_opt m_name ms
+  | Some (_super,_fs,ms) -> List.assoc_opt m_name ms
 
 let rec apply_method : string -> exp_val -> exp_val list ->
   method_decl -> exp_val ea_result =
