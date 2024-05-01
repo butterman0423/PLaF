@@ -1,0 +1,31 @@
+# dune utop
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /home/butter/.cache/dune/db
+# Workspace root: /home/butter/PLaF/src/explicit-refs
+# Auto-detected concurrency: 1
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; installed_env =
+#      map
+#        { "INSIDE_DUNE" : "/home/butter/PLaF/src/explicit-refs/_build/default"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; instrument_with = []
+#  }
+$ /usr/bin/ocamlc.opt -config > /tmp/dune_357156_output
+$ (cd _build/default && /usr/bin/ocamldep.opt -modules -impl lib/ds.ml) > _build/default/lib/.explicit_refs.objs/explicit_refs__Ds.impl.d
+$ (cd _build/default && /usr/bin/ocamldep.opt -modules -impl lib/interp.ml) > _build/default/lib/.explicit_refs.objs/explicit_refs__Interp.impl.d
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -bin-annot -I lib/.explicit_refs.objs/byte -I /home/butter/.opam/default/lib/menhirLib -I /home/butter/.opam/default/lib/parser_plaf -no-alias-deps -opaque -open Explicit_refs -o lib/.explicit_refs.objs/byte/explicit_refs__Ds.cmo -c -impl lib/ds.ml)
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -bin-annot -I lib/.explicit_refs.objs/byte -I /home/butter/.opam/default/lib/menhirLib -I /home/butter/.opam/default/lib/parser_plaf -no-alias-deps -opaque -open Explicit_refs -o lib/.explicit_refs.objs/byte/explicit_refs__Store.cmi -c -intf lib/store.mli)
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -bin-annot -I lib/.explicit_refs.objs/byte -I /home/butter/.opam/default/lib/menhirLib -I /home/butter/.opam/default/lib/parser_plaf -intf-suffix .ml -no-alias-deps -opaque -open Explicit_refs -o lib/.explicit_refs.objs/byte/explicit_refs__Store.cmo -c -impl lib/store.ml)
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -bin-annot -I lib/.explicit_refs.objs/byte -I /home/butter/.opam/default/lib/menhirLib -I /home/butter/.opam/default/lib/parser_plaf -no-alias-deps -opaque -open Explicit_refs -o lib/.explicit_refs.objs/byte/explicit_refs__Interp.cmo -c -impl lib/interp.ml)
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -bin-annot -I lib/.utop/.utop.eobjs/byte -I /home/butter/.opam/default/lib/bytes -I /home/butter/.opam/default/lib/findlib -I /home/butter/.opam/default/lib/lambda-term -I /home/butter/.opam/default/lib/logs -I /home/butter/.opam/default/lib/lwt -I /home/butter/.opam/default/lib/lwt/unix -I /home/butter/.opam/default/lib/lwt_react -I /home/butter/.opam/default/lib/menhirLib -I /home/butter/.opam/default/lib/mew -I /home/butter/.opam/default/lib/mew_vi -I /home/butter/.opam/default/lib/ocplib-endian -I /home/butter/.opam/default/lib/ocplib-endian/bigstring -I /home/butter/.opam/default/lib/parser_plaf -I /home/butter/.opam/default/lib/react -I /home/butter/.opam/default/lib/result -I /home/butter/.opam/default/lib/trie -I /home/butter/.opam/default/lib/uchar -I /home/butter/.opam/default/lib/utop -I /home/butter/.opam/default/lib/uucp -I /home/butter/.opam/default/lib/uuseg -I /home/butter/.opam/default/lib/uutf -I /home/butter/.opam/default/lib/xdg -I /home/butter/.opam/default/lib/zed -I /usr/lib/ocaml/compiler-libs -I /usr/lib/ocaml/threads -I lib/.explicit_refs.objs/byte -no-alias-deps -o lib/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -c -impl lib/.utop/utop.ml-gen)
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -a -o lib/explicit_refs.cma lib/.explicit_refs.objs/byte/explicit_refs.cmo lib/.explicit_refs.objs/byte/explicit_refs__Ds.cmo lib/.explicit_refs.objs/byte/explicit_refs__Store.cmo lib/.explicit_refs.objs/byte/explicit_refs__Interp.cmo)
+$ (cd _build/default && /usr/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -o lib/.utop/utop.bc /usr/lib/ocaml/compiler-libs/ocamlcommon.cma /usr/lib/ocaml/compiler-libs/ocamlbytecomp.cma /usr/lib/ocaml/compiler-libs/ocamltoplevel.cma /home/butter/.opam/default/lib/findlib/findlib.cma /home/butter/.opam/default/lib/findlib/findlib_top.cma /home/butter/.opam/default/lib/logs/logs.cma /home/butter/.opam/default/lib/lwt/lwt.cma /home/butter/.opam/default/lib/logs/logs_lwt.cma /usr/lib/ocaml/unix.cma /usr/lib/ocaml/bigarray.cma /home/butter/.opam/default/lib/ocplib-endian/ocplib_endian.cma /home/butter/.opam/default/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cma /usr/lib/ocaml/threads/threads.cma /home/butter/.opam/default/lib/lwt/unix/lwt_unix.cma -I /home/butter/.opam/default/lib/lwt/../stublibs /home/butter/.opam/default/lib/react/react.cma /home/butter/.opam/default/lib/lwt_react/lwt_react.cma /home/butter/.opam/default/lib/result/result.cma /home/butter/.opam/default/lib/uutf/uutf.cma /home/butter/.opam/default/lib/uucp/uucp.cma /home/butter/.opam/default/lib/uuseg/uuseg.cma /home/butter/.opam/default/lib/zed/zed.cma /home/butter/.opam/default/lib/trie/trie.cma /home/butter/.opam/default/lib/mew/mew.cma /home/butter/.opam/default/lib/mew_vi/mew_vi.cma /home/butter/.opam/default/lib/lambda-term/lambda_term.cma -I /home/butter/.opam/default/lib/lambda-term/../stublibs /home/butter/.opam/default/lib/xdg/xdg.cma -I /home/butter/.opam/default/lib/xdg/../stublibs /home/butter/.opam/default/lib/utop/uTop.cma /home/butter/.opam/default/lib/menhirLib/menhirLib.cma /home/butter/.opam/default/lib/parser_plaf/parser_plaf.cma lib/explicit_refs.cma lib/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -linkall -warn-error -31)
